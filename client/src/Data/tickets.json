@@ -1,0 +1,74 @@
+[
+  {
+    "id": "120",
+    "date": "13/03/2022",
+    "title": "Location search not working",
+    "assignee": "Rohan Gaonkar",
+    "assignor": "Vihan Naik",
+    "priority": "high",
+    "status": "pending"
+  },
+  {
+    "id": "122",
+    "date": "12/02/2022",
+    "title": "Cart flow issue",
+    "assignee": "Aaron Fernandes",
+    "assignor": "Rohit Roy",
+    "priority": "medium",
+    "status": "closed"
+  },
+  {
+    "id": "342",
+    "date": "20/04/2022",
+    "title": "User registration issue",
+    "assignee": "Akhil Prabhu",
+    "assignor": "Vihan Naik",
+    "priority": "low",
+    "status": "pending"
+  },
+  {
+    "id": "432",
+    "date": "19/06/2022",
+    "title": "Product are not visible",
+    "assignee": "Rohan Gaonkar",
+    "assignor": "Saish Dev",
+    "priority": "low",
+    "status": "pending"
+  },
+  {
+    "id": "345",
+    "date": "24/04/2022",
+    "title": "Responsive feature issue",
+    "assignee": "Maya Prabhu",
+    "assignor": "Kesha Sai",
+    "priority": "high",
+    "status": "closed"
+  },
+  {
+    "id": "234",
+    "date": "23/08/2022",
+    "title": "Filter not working properly",
+    "assignee": "Rohan Gaonkar",
+    "assignor": "Arush Naik",
+    "priority": "medium",
+    "status": "pending"
+  },
+  {
+    "id": "484",
+    "date": "10/04/2022",
+    "title": "Price graph scale issue",
+    "assignee": "Preeti Kapoor",
+    "assignor": "Kriti Kumari",
+    "priority": "medium",
+    "status": "pending"
+  },
+  {
+    "id": "341",
+    "date": "22/06/2022",
+    "title": "Background is not consistent",
+    "assignee": "Brandon Vaz",
+    "assignor": "Roy Fernandese",
+    "priority": "low",
+    "status": "closed"
+  }
+]

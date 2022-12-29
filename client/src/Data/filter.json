@@ -1,0 +1,27 @@
+[
+  {
+    "id": "100",
+    "type": "priority",
+    "value": "high"
+  },
+  {
+    "id": "101",
+    "type": "priority",
+    "value": "medium"
+  },
+  {
+    "id": "102",
+    "type": "priority",
+    "value": "low"
+  },
+  {
+    "id": "103",
+    "type": "status",
+    "value": "pending"
+  },
+  {
+    "id": "104",
+    "type": "status",
+    "value": "closed"
+  }
+]
