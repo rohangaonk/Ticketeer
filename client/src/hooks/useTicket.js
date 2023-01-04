@@ -38,34 +38,5 @@ export const useTicket = () => {
     }
   };
 
-  const getTickets = async () => {
-    try {
-      setIsLoading(true);
-      setError(false);
-      const response = await fetch("/api/tickets", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": user.accessToken,
-        },
-      });
-
-      const json = await response.json();
-      if (!response.ok) {
-        setIsLoading(false);
-        setError(json.message);
-        return [];
-      }
-      if (response.ok) {
-        setIsLoading(false);
-        return json.data.tickets;
-      }
-    } catch (err) {
-      setIsLoading(false);
-      setError("Please check network");
-      return [];
-    }
-  };
-
-  return { saveTicket, getTickets, isLoading, error, success };
+  return { saveTicket, isLoading, error, success };
 };

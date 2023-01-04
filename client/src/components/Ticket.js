@@ -1,32 +1,37 @@
 import React from "react";
-
+import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 function Ticket({ item }) {
+  const navigate = useNavigate();
   return (
-    <tr className="hover">
+    <tr
+      className="hover cursor-pointer"
+      onClick={() => navigate(`/auth/tickets/${item.id}`)}
+    >
       <td>
-        <span>{item.id}</span>
+        <span>{item.id.slice(0, 4)}</span>
       </td>
-      <td>{item.date}</td>
+      <td>{dayjs(item.createdAt).format("DD-MM-YYYY HH:mm")}</td>
       <td>
         <p className="font-medium w-40 truncate">{item.title}</p>
       </td>
       <td>
         <div className="flex space-x-2 items-center">
           <div className="h-8 w-8 bg-primary flex justify-center items-center rounded-full text-primary-content uppercase">
-            <span>{item.assignee[0]}</span>
+            <span>{item.assignee.name[0]}</span>
           </div>
           <div>
-            <p className="text-sm">{item.assignee}</p>
+            <p className="text-sm">{item.assignee.email}</p>
           </div>
         </div>
       </td>
       <td>
         <div className="flex space-x-2 items-center">
           <div className="h-8 w-8 bg-secondary flex justify-center items-center rounded-full text-primary-content uppercase">
-            <span>{item.assignor[0]}</span>
+            <span>{item.assignor.name[0]}</span>
           </div>
           <div>
-            <p className="text-sm">{item.assignor}</p>
+            <p className="text-sm">{item.assignor.email}</p>
           </div>
         </div>
       </td>
@@ -46,7 +51,7 @@ function Ticket({ item }) {
       <td>
         <div
           className={`w-16 text-xs badge ${
-            item.status === "pending" ? "badge-warning" : "badge-success"
+            item.status === "open" ? "badge-warning" : "badge-success"
           }`}
         >
           {item.status}

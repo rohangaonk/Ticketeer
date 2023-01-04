@@ -10,6 +10,7 @@ type filter = {
 module.exports = (req, res, next) => {
   try {
     const criteria = req.query.filter ? JSON.parse(req.query.filter) : {};
+    console.log("criteria*********", criteria);
     let { filter, order, limit, offset } = criteria;
     filter = filter ? filter : null;
     const modifier = {};
@@ -34,5 +35,5 @@ module.exports = (req, res, next) => {
 // order:"DATE_ASC" to {key:"createdAt", value:"DESC"}
 const createSortOrder = (order) => {
   if (order === "DATE_ASC") return { key: "createdAt", value: "ASC" };
-  if (order === "DATE_DESC") return { key: "createdAt", valu: "DESC" };
+  if (order === "DATE_DESC") return { key: "createdAt", value: "DESC" };
 };

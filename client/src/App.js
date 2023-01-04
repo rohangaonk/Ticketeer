@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 
 import Home from "./components/Home";
 import Guest from "./components/Guest";
+import Welcome from "./components/Welcome";
 
 function App() {
   const [dark, setDark] = useState(false);

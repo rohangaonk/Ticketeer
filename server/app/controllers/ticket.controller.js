@@ -76,6 +76,7 @@ const getTicketByUser = async (req, res) => {
 
 const getAllTickets = async (req, res) => {
   const { filter, modifier } = req.query.filter;
+  console.log({ filter, modifier });
   const tickets = await ticketService.getAllTickets(filter, modifier);
   res.status(200).json({
     message: "tickets retrieved",
@@ -84,6 +85,7 @@ const getAllTickets = async (req, res) => {
     },
   });
 };
+
 module.exports = {
   getTicket,
   getAllTickets,

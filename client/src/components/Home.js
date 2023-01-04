@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Tickets from "./Tickets";
 import CreateTicket from "./CreateTicket";
 import Sidebar from "./Sidebar";
+import TicketDetails from "./TicketDetails";
 
 function Home() {
   return (
@@ -24,6 +25,14 @@ function Home() {
           element={
             <div className="sm:ml-56 pt-20">
               <CreateTicket />
+            </div>
+          }
+        />
+        <Route
+          path="tickets/:id"
+          element={
+            <div className="sm:ml-56 pt-20">
+              <TicketDetails />
             </div>
           }
         />

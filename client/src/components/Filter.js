@@ -1,24 +1,51 @@
 import React, { useState } from "react";
-import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import FilterCategory from "./FilterCategory";
-import filtersData from "../Data/filter.json";
 
-function Filter() {
-  const [category, setCategory] = useState("priority");
-  const [filters, setFilters] = useState(
-    filtersData.map((item) => ({ ...item, isChecked: false }))
-  );
+function Filter({ setFilter }) {
+  const [priority, setPriority] = useState([]);
+  const [status, setStatus] = useState([]);
 
-  const changeFilters = (id) => {
-    let index = filters.findIndex((item) => item.id === id);
+  const handleChange = (e) => {
+    switch (e.target.name) {
+      case "status":
+        if (e.target.checked)
+          setStatus((prev) => {
+            return [...prev, e.target.value];
+          });
+        else {
+          setStatus((prev) => {
+            return [...prev.filter((elem) => elem !== e.target.value)];
+          });
+        }
+        break;
+      case "priority":
+        if (e.target.checked)
+          setPriority((prev) => {
+            return [...prev, e.target.value];
+          });
+        else {
+          setPriority((prev) => {
+            return [...prev.filter((elem) => elem !== e.target.value)];
+          });
+        }
+        break;
+      default:
+        break;
+    }
+  };
 
-    let updatedState = [
-      ...filters.slice(0, index),
-      { ...filters[index], isChecked: !filters[index].isChecked },
-      ...filters.slice(index + 1),
-    ];
-    setFilters(updatedState);
+  const applyFilter = () => {
+    if (!priority.length && !status.length) setFilter({});
+    else if (priority.length && !status.length)
+      setFilter({ priority: [...priority] });
+    else if (!priority.length && status.length)
+      setFilter({ status: [...status] });
+    else setFilter({ priority: [...priority], status: [...status] });
+  };
+
+  const clearFilter = () => {
+    setPriority([]);
+    setStatus([]);
+    setFilter({});
   };
 
   return (
@@ -35,18 +62,93 @@ function Filter() {
           <div className="_header w-full bg-base-200  px-4 py-6 flex justify-between items-center">
             <span>Filters</span>
             <div className="flex space-x-2">
-              <button className="btn btn-sm btn-ghost">Apply</button>
-              <button className="btn btn-sm btn-ghost">Clear</button>
+              <button className="btn btn-sm btn-ghost" onClick={applyFilter}>
+                Apply
+              </button>
+              <button className="btn btn-sm btn-ghost" onClick={clearFilter}>
+                Clear
+              </button>
             </div>
           </div>
-          <div className="_body text-sm flex justify-between h-full divide-x divide-base-300">
+          <div className="_body p-4 flex justify-around space-x-8">
+            <div className="flex flex-col ">
+              <h3 className="_status font-medium">Status</h3>
+              <ul className="text-md w-28">
+                <li>
+                  <label className="label cursor-pointer">
+                    <span className="label-text capitalize">Open</span>
+                    <input
+                      className="checkbox checkbox-sm checkbox-primary border "
+                      type="checkbox"
+                      name="status"
+                      value="open"
+                      checked={status.includes("open")}
+                      onChange={handleChange}
+                    />
+                  </label>
+                </li>
+                <li>
+                  <label className="label cursor-pointer">
+                    <span className="label-text capitalize">Closed</span>
+                    <input
+                      className="checkbox checkbox-sm checkbox-primary border "
+                      type="checkbox"
+                      name="status"
+                      value="closed"
+                      checked={status.includes("closed")}
+                      onChange={handleChange}
+                    />
+                  </label>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="_status font-medium">Priority</h3>
+              <ul className="text-md w-28">
+                <li>
+                  <label className="label cursor-pointer">
+                    <span className="label-text capitalize">Low</span>
+                    <input
+                      className="checkbox checkbox-sm checkbox-primary border "
+                      type="checkbox"
+                      name="priority"
+                      value="low"
+                      checked={priority.includes("low")}
+                      onChange={handleChange}
+                    />
+                  </label>
+                </li>
+                <li>
+                  <label className="label cursor-pointer">
+                    <span className="label-text capitalize">Medium</span>
+                    <input
+                      className="checkbox checkbox-sm checkbox-primary border "
+                      type="checkbox"
+                      name="priority"
+                      value="medium"
+                      checked={priority.includes("medium")}
+                      onChange={handleChange}
+                    />
+                  </label>
+                </li>
+                <li>
+                  <label className="label cursor-pointer">
+                    <span className="label-text capitalize">High</span>
+                    <input
+                      className="checkbox checkbox-sm checkbox-primary border "
+                      type="checkbox"
+                      name="priority"
+                      value="high"
+                      checked={priority.includes("high")}
+                      onChange={handleChange}
+                    />
+                  </label>
+                </li>
+              </ul>
+            </div>
+            {/* 
             <ul className="menu [&>li>*]:flex [&>li>*]:justify-between mt-4">
-              <li
-                className={`border-l-4 border-base-200 ${
-                  category === "priority" ? "border-primary" : ""
-                }`}
-                onClick={() => setCategory("priority")}
-              >
+              <li>
                 <a>
                   <span>Priority</span>
                   <span>
@@ -54,12 +156,7 @@ function Filter() {
                   </span>
                 </a>
               </li>
-              <li
-                className={`border-l-4 border-base-200   ${
-                  category === "status" ? "border-primary" : ""
-                }`}
-                onClick={() => setCategory("status")}
-              >
+              <li>
                 <a>
                   <span>Status</span>
                   <span>
@@ -69,12 +166,56 @@ function Filter() {
               </li>
             </ul>
             <div>
-              <FilterCategory
-                category={category}
-                changeFilters={changeFilters}
-                items={filters}
-              />
-            </div>
+              <div className="_status form-control py-4 w-56 h-full">
+                <label className="label cursor-pointer px-12 border-b border-base-300">
+                  <span className="label-text px-4 capitalize">Open</span>
+                  <input
+                    className="checkbox checkbox-sm checkbox-primary border "
+                    type="checkbox"
+                    name="status"
+                    checked={false}
+                  />
+                </label>
+                <label className="label cursor-pointer px-12 border-b border-base-300">
+                  <span className="label-text px-4 capitalize">Closed</span>
+                  <input
+                    className="checkbox checkbox-sm checkbox-primary border "
+                    type="checkbox"
+                    name="status"
+                    checked={false}
+                  />
+                </label>
+              </div>
+              <div className="_priority form-control py-4 w-56 h-full">
+                <label className="label cursor-pointer px-12 border-b border-base-300">
+                  <span className="label-text px-4 capitalize">Low</span>
+                  <input
+                    className="checkbox checkbox-sm checkbox-primary border "
+                    type="checkbox"
+                    name="priority"
+                    checked={false}
+                  />
+                </label>
+                <label className="label cursor-pointer px-12 border-b border-base-300">
+                  <span className="label-text px-4 capitalize">Medium</span>
+                  <input
+                    className="checkbox checkbox-sm checkbox-primary border "
+                    type="checkbox"
+                    name="priority"
+                    checked={false}
+                  />
+                </label>
+                <label className="label cursor-pointer px-12 border-b border-base-300">
+                  <span className="label-text px-4 capitalize">High</span>
+                  <input
+                    className="checkbox checkbox-sm checkbox-primary border "
+                    type="checkbox"
+                    name="priority"
+                    checked={false}
+                  />
+                </label>
+              </div>
+            </div> */}
           </div>
         </div>
       </div>

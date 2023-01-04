@@ -24,6 +24,9 @@ const { User, Ticket, Token } = db;
 User.hasMany(Ticket, { as: "assignee", foreignKey: "assigneeId" });
 User.hasMany(Ticket, { as: "assignor", foreignKey: "assignorId" });
 
+Ticket.belongsTo(User, { as: "assignee", foreignKey: "assigneeId" });
+Ticket.belongsTo(User, { as: "assignor", foreignKey: "assignorId" });
+
 User.hasOne(Token);
 Token.belongsTo(User);
 
