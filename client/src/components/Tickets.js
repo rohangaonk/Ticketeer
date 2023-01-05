@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 function Tickets() {
   const [isOldest, setIsOldest] = useState(true);
   const [filter, setFilter] = useState({});
-  console.log(filter);
   const {
     data: ticketData,
     loading,
@@ -19,7 +18,7 @@ function Tickets() {
   });
 
   return (
-    <div className="sm:py-6 sm:px-8 p-4">
+    <div className="sm:p-6 p-4">
       <div className="flex justify-between items-center ">
         <div>
           <span className="font-semibold">145</span> Tickets

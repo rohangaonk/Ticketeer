@@ -4,39 +4,22 @@ import Tickets from "./Tickets";
 import CreateTicket from "./CreateTicket";
 import Sidebar from "./Sidebar";
 import TicketDetails from "./TicketDetails";
+import EditTicket from "./EditTicket";
 
 function Home() {
   return (
-    <div>
-      <div className="hidden fixed z-20 w-56 h-screen top-0 sm:block">
+    <div className="flex mt-20 space-x-2">
+      <div className="hidden z-20 w-56 h-screen top-0 sm:block">
         <Sidebar />
       </div>
-      <Routes>
-        <Route
-          path="tickets"
-          element={
-            <div className="sm:ml-56 pt-20">
-              <Tickets />
-            </div>
-          }
-        />
-        <Route
-          path="create-ticket"
-          element={
-            <div className="sm:ml-56 pt-20">
-              <CreateTicket />
-            </div>
-          }
-        />
-        <Route
-          path="tickets/:id"
-          element={
-            <div className="sm:ml-56 pt-20">
-              <TicketDetails />
-            </div>
-          }
-        />
-      </Routes>
+      <div className="w-full">
+        <Routes>
+          <Route path="tickets" element={<Tickets />} />
+          <Route path="create-ticket" element={<CreateTicket />} />
+          <Route path="edit-ticket" element={<EditTicket />} />
+          <Route path="tickets/:id" element={<TicketDetails />} />
+        </Routes>
+      </div>
     </div>
   );
 }

@@ -11,11 +11,11 @@ class BaseRepository {
 
   //returns array [no_of_updated_rows, [tickets, ...]]
   update = async (data, filter) => {
-    const updatedEnity = await this.model.update(data, {
+    const updatedEntity = await this.model.update(data, {
       where: filter,
       returning: true,
     });
-    return updatedEntity[1] ? updatedEnity[1][0].get({ plain: true }) : null;
+    return updatedEntity[1] ? updatedEntity[1][0].get({ plain: true }) : null;
   };
 
   //direct query plain object

@@ -5,20 +5,19 @@ export const useTicket = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-  const saveTicket = async (title, description, priority, assigneeId) => {
+  const saveTicket = async (url, body) => {
     try {
-      console.log({ title, description, priority, assigneeId });
       setIsLoading(true);
       setError(false);
-      const response = await fetch("/api/tickets", {
+      console.log("sdfsfd");
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "x-access-token": user.accessToken,
         },
-        body: JSON.stringify({ title, description, priority, assigneeId }),
+        body: JSON.stringify(body),
       });
-
       const json = await response.json();
       if (!response.ok) {
         setIsLoading(false);

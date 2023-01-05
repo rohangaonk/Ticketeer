@@ -10,8 +10,16 @@ class TicketRepository extends BaseRepository {
     const items = await this.model.findAll({
       where: filter,
       include: [
-        { model: userModel, as: "assignee", attributes: ["name", "email"] },
-        { model: userModel, as: "assignor", attributes: ["name", "email"] },
+        {
+          model: userModel,
+          as: "assignee",
+          attributes: ["name", "email", "id"],
+        },
+        {
+          model: userModel,
+          as: "assignor",
+          attributes: ["name", "email", "id"],
+        },
       ],
       ...modifiers,
     });
@@ -21,8 +29,16 @@ class TicketRepository extends BaseRepository {
   findByPk = async (id) => {
     const entity = await this.model.findByPk(id, {
       include: [
-        { model: userModel, as: "assignee", attributes: ["name", "email"] },
-        { model: userModel, as: "assignor", attributes: ["name", "email"] },
+        {
+          model: userModel,
+          as: "assignee",
+          attributes: ["name", "email", "id"],
+        },
+        {
+          model: userModel,
+          as: "assignor",
+          attributes: ["name", "email", "id"],
+        },
       ],
     });
     return entity ? entity.get({ plain: true }) : null;

@@ -41,7 +41,7 @@ function Navbar({ dark, setDark }) {
           </button>
           <nav
             tabIndex="0"
-            className="fixed h-screen  left-0 top-0 -translate-x-60 group-focus-within:translate-x-0  transition-transform duration-200 ease-in"
+            className="fixed h-screen left-0 top-0 -translate-x-60 group-focus-within:translate-x-0  transition-transform duration-200 ease-in"
           >
             <Sidebar />
           </nav>

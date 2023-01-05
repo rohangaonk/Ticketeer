@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { replace, useFormik } from "formik";
+import { useFormik } from "formik";
 import { useTicket } from "../hooks/useTicket";
 import useAuthFetch from "../hooks/useAuthFetch";
 import { ticketSchema } from "../validations/ticketSchema";
 
 //if fields prop is provided then use same component for editing ticket
-function CreateTicket() {
+function EditTicket() {
+  const { state, pathname } = useLocation();
+  const navigate = useNavigate();
+  const fields = state?.fields;
   const { saveTicket, success, error, isLoading } = useTicket();
   //for fetching data with user in localstorage (auth data)
   const { data: userData } = useAuthFetch("/api/users");
@@ -19,34 +22,39 @@ function CreateTicket() {
     touched,
   } = useFormik({
     initialValues: {
-      title: "",
-      description: "",
-      priority: "",
-      assignee: "",
+      title: fields?.title,
+      description: fields?.description,
+      priority: fields?.priority,
+      assignee: fields?.assignee,
     },
     validationSchema: ticketSchema,
     onSubmit: async (
       { title, description, priority, assignee },
       { resetForm }
     ) => {
-      const url = "/api/tickets";
+      const url = `/api/tickets/${fields.id}`;
       const body = {
         title,
         description,
         priority,
         assigneeId: assignee,
       };
-      console.log("submitting");
       await saveTicket(url, body);
       resetForm({ values: "" });
+      //after success clear route state
+      navigate(`/auth/tickets/${fields.id}`);
     },
   });
 
+  if (isLoading) return <div className="text-sm">Loading...</div>;
+  if (error) return <div className="text-sm text-red-500">{error}</div>;
+  if (!fields)
+    return <div className="text-sm text-red-500">Select ticket to edit</div>;
+
   return (
     <div className="relative">
-      {isLoading && <div className="text-sm">Loading...</div>}
       <div className="w-96 bg-base-200 mt-4 mx-auto">
-        <p className="p-4 bg-base-300 ">Create Ticket</p>
+        <p className="p-4 bg-base-300 ">Edit Ticket</p>
         <form
           onSubmit={handleSubmit}
           className="form-control w-full space-y-4 p-4"
@@ -152,7 +160,6 @@ function CreateTicket() {
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
-          {error && <div className="text-sm text-red-500">{error}</div>}
         </form>
         {/* toast */}
 
@@ -168,4 +175,4 @@ function CreateTicket() {
   );
 }
 
-export default CreateTicket;
+export default EditTicket;

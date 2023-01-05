@@ -22,7 +22,7 @@ const createTicket = async (req, res) => {
   });
 };
 const updateTicket = async (req, res) => {
-  const { title, description, assigneeId, status, priority } = req.body;
+  const { title, description, assigneeId, priority } = req.body;
   const assignorId = req.userId;
   const ticketId = req.params.ticketId;
   const updatedTicket = await ticketService.updateTicket(
@@ -30,9 +30,9 @@ const updateTicket = async (req, res) => {
       title,
       description,
       assigneeId,
-      status,
       priority,
       assignorId,
+      status: "open",
     },
     ticketId
   );

@@ -1,68 +1,169 @@
-import React from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import useAuthFetch from "../hooks/useAuthFetch";
+import Modal from "./Modal";
 function TicketDetails() {
+  //same modal reused for both actions (edit and status update)
+  const [editModal, setEditModal] = useState(false);
+  const [statusModal, setStatusModal] = useState(false);
+  const navigate = useNavigate();
   const { id } = useParams();
   const {
     data: { ticket } = {},
     loading,
     error,
   } = useAuthFetch(`/api/tickets/${id}`);
-  console.log(ticket);
+
+  const handleModalClose = () => {
+    setEditModal(false);
+    setStatusModal(false);
+  };
+  const handleEditTicketCheck = () => {
+    //if ticket is in closed state we show modal
+    //else direct redirect to edit page
+    if (ticket.status === "closed") {
+      setStatusModal(false);
+      setEditModal(true);
+    } else handleEditTicket();
+  };
+  const handleStatusModalOpen = () => {
+    setEditModal(false);
+    setStatusModal(true);
+  };
+
+  const handleEditTicket = () => {
+    navigate("/auth/edit-ticket", {
+      state: {
+        fields: {
+          id: ticket.id,
+          title: ticket.title,
+          description: ticket.description,
+          priority: ticket.priority,
+          assignee: ticket.assignee.id,
+        },
+      },
+    });
+  };
 
   if (error) return <div>{error.message}</div>;
 
   if (loading) return <div>Loading...</div>;
 
   return ticket ? (
-    <div className="sm:w-1/2 w-3/4 p-4 mx-auto mt-8 bg-base-200 border rounded border-gray-400">
+    <div className="sm:w-1/2 w-11/12 p-4 mx-auto mt-8 border rounded border-gray-500">
       <div className="_header flex">
-        <h2 className="font-bold text-xl mb-2 w-4/6">{ticket.title}</h2>
+        <h2 className="font-bold text-xl mb-2 w-4/6 text-primary dark:text-secondary">
+          {ticket.title}
+        </h2>
         <div className="text-sm w-2/6 flex justify-end">
           <span>{dayjs().format("DD-MMM-YYYY hh:mm a")}</span>
         </div>
       </div>
 
-      <p>{ticket.description}</p>
-      <div className="sm:flex sm:space-x-6 items-center mt-6">
+      <p className="mt-4">{ticket.description}</p>
+      <div className="sm:flex sm:space-x-6  mt-6">
         <div className="flex items-center space-x-2 mt-2">
           <div className="h-8 w-8 bg-primary flex justify-center items-center rounded-full text-primary-content uppercase">
             <span>{ticket.assignee.name[0]}</span>
           </div>
-          <div>
-            <p className="text-sm">{ticket.assignee.email}</p>
+          <div className="text-sm">
+            <p>{ticket.assignee.email}</p>
+            <p>Assignee</p>
           </div>
         </div>
         <div className="flex items-center space-x-2 mt-2">
           <div className="h-8 w-8 bg-secondary flex justify-center items-center rounded-full text-primary-content uppercase">
             <span>{ticket.assignor.name[0]}</span>
           </div>
-          <div>
-            <p className="text-sm">{ticket.assignor.email}</p>
+          <div className="text-sm">
+            <p>{ticket.assignor.email}</p>
+            <p>Assignor</p>
           </div>
         </div>
       </div>
-      <div className="mt-4 flex space-x-4">
-        <div
-          className={`w-16 text-xs badge ${
-            ticket.priority === "high"
-              ? "badge-error"
-              : ticket.priority === "medium"
-              ? "badge-warning"
-              : "badge-info"
-          }`}
-        >
-          {ticket.priority}
+      <div className="_footer mt-4 flex justify-between ">
+        <div className="_badges flex space-x-4">
+          <div
+            className={`w-16 text-xs badge ${
+              ticket.priority === "high"
+                ? "badge-error"
+                : ticket.priority === "medium"
+                ? "badge-warning"
+                : "badge-info"
+            }`}
+          >
+            {ticket.priority}
+          </div>
+          <div
+            className={`w-16 text-xs badge ${
+              ticket.status === "open" ? "badge-warning" : "badge-success"
+            }`}
+          >
+            {ticket.status}
+          </div>
         </div>
-        <div
-          className={`w-16 text-xs badge ${
-            ticket.status === "open" ? "badge-warning" : "badge-success"
-          }`}
-        >
-          {ticket.status}
+        <div className="_action_buttons flex space-x-2">
+          <button
+            className="btn btn-xs btn-outline btn-secondary"
+            onClick={handleEditTicketCheck}
+          >
+            Edit
+          </button>
+          <button
+            className="btn btn-xs btn-accent"
+            onClick={handleStatusModalOpen}
+          >
+            {ticket.status === "open" ? "Resolve" : "Open"}
+          </button>
         </div>
       </div>
+      {editModal && (
+        <Modal>
+          <div className="text-black">
+            <h1 className="font-bold">Are you sure?</h1>
+            <p className="text-sm font-medium mt-1">
+              Ticket is in closed state. If you continue this ticket will be
+              auto-updated to open state. Do you want to continue?
+            </p>
+          </div>
+          <div className="mt-8  flex justify-center space-x-4 ">
+            <button
+              className="btn btn-xs btn-warning"
+              onClick={handleModalClose}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn btn-xs btn-secondary"
+              onClick={handleEditTicket}
+            >
+              Continue
+            </button>
+          </div>
+        </Modal>
+      )}
+      {statusModal && (
+        <Modal>
+          <div className="text-black">
+            <h1 className="font-bold">Are you sure?</h1>
+            <p className="text-sm font-medium mt-1">
+              {`this action will ${
+                ticket.status === "open" ? "close" : "re-open"
+              } the ticket`}
+            </p>
+          </div>
+          <div className="mt-8  flex justify-center space-x-4 ">
+            <button
+              className="btn btn-xs btn-warning"
+              onClick={handleModalClose}
+            >
+              Cancel
+            </button>
+            <button className="btn btn-xs btn-secondary">Continue</button>
+          </div>
+        </Modal>
+      )}
     </div>
   ) : (
     <div>No Ticket to show</div>
