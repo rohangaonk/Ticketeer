@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 import Logo from "./ui-components/Logo";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon } from "@fortawesome/free-solid-svg-icons";
-import { faSun } from "@fortawesome/free-solid-svg-icons";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faMoon, faSun, faBars } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
 import Profile from "./Profile";
 

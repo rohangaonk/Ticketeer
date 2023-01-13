@@ -2,11 +2,20 @@ import React, { useState } from "react";
 import dayjs from "dayjs";
 import { useParams, useNavigate } from "react-router-dom";
 import useAuthFetch from "../hooks/useAuthFetch";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Modal from "./Modal";
+
+const modalTypes = {
+  EDIT: "EDIT",
+  STATUS: "STATUS",
+  DELETE: "DELETE",
+};
+
 function TicketDetails() {
   //same modal reused for both actions (edit and status update)
-  const [editModal, setEditModal] = useState(false);
-  const [statusModal, setStatusModal] = useState(false);
+  const [modal, setModal] = useState({ open: false, type: "" });
+
   const navigate = useNavigate();
   const { id } = useParams();
   const {
@@ -16,20 +25,15 @@ function TicketDetails() {
   } = useAuthFetch(`/api/tickets/${id}`);
 
   const handleModalClose = () => {
-    setEditModal(false);
-    setStatusModal(false);
+    setModal({ open: false, type: "" });
   };
-  const handleEditTicketCheck = () => {
+
+  const handleEditModal = () => {
     //if ticket is in closed state we show modal
     //else direct redirect to edit page
     if (ticket.status === "closed") {
-      setStatusModal(false);
-      setEditModal(true);
+      setModal({ open: true, type: modalTypes.EDIT });
     } else handleEditTicket();
-  };
-  const handleStatusModalOpen = () => {
-    setEditModal(false);
-    setStatusModal(true);
   };
 
   const handleEditTicket = () => {
@@ -57,7 +61,15 @@ function TicketDetails() {
           {ticket.title}
         </h2>
         <div className="text-sm w-2/6 flex justify-end">
-          <span>{dayjs().format("DD-MMM-YYYY hh:mm a")}</span>
+          <span className="mr-1">{dayjs().format("DD-MM-YYYY hh:mm a")}</span>
+          <span className="btn btn-xs btn-ghost">
+            <FontAwesomeIcon
+              icon={faTrash}
+              className="text-red-500 cursor-pointer"
+              size="lg"
+              onClick={() => setModal({ open: true, type: modalTypes.DELETE })}
+            />
+          </span>
         </div>
       </div>
 
@@ -106,19 +118,19 @@ function TicketDetails() {
         <div className="_action_buttons flex space-x-2">
           <button
             className="btn btn-xs btn-outline btn-secondary"
-            onClick={handleEditTicketCheck}
+            onClick={handleEditModal}
           >
             Edit
           </button>
           <button
             className="btn btn-xs btn-accent"
-            onClick={handleStatusModalOpen}
+            onClick={() => setModal({ open: true, type: modalTypes.STATUS })}
           >
             {ticket.status === "open" ? "Resolve" : "Open"}
           </button>
         </div>
       </div>
-      {editModal && (
+      {modal.open && modal.type === modalTypes.EDIT && (
         <Modal>
           <div className="text-black">
             <h1 className="font-bold">Are you sure?</h1>
@@ -143,7 +155,7 @@ function TicketDetails() {
           </div>
         </Modal>
       )}
-      {statusModal && (
+      {modal.open && modal.type === modalTypes.STATUS && (
         <Modal>
           <div className="text-black">
             <h1 className="font-bold">Are you sure?</h1>
@@ -151,6 +163,25 @@ function TicketDetails() {
               {`this action will ${
                 ticket.status === "open" ? "close" : "re-open"
               } the ticket`}
+            </p>
+          </div>
+          <div className="mt-8  flex justify-center space-x-4 ">
+            <button
+              className="btn btn-xs btn-warning"
+              onClick={handleModalClose}
+            >
+              Cancel
+            </button>
+            <button className="btn btn-xs btn-secondary">Continue</button>
+          </div>
+        </Modal>
+      )}
+      {modal.open && modal.type === modalTypes.DELETE && (
+        <Modal>
+          <div className="text-black">
+            <h1 className="font-bold">Are you sure?</h1>
+            <p className="text-sm font-medium mt-1">
+              This will delete current ticket
             </p>
           </div>
           <div className="mt-8  flex justify-center space-x-4 ">
