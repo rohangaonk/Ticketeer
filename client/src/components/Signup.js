@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
-import { useSignup } from "../hooks/useSignup";
+import { useSignup } from "../hooks/useAuthUser";
 import { signupSchema } from "../validations/signupSchema";
 
 function Signup() {
-  const { signup, isLoading, error } = useSignup({
-    successRedirect: "/signin",
-  });
+  const { mutate: doSignup, isLoading, isError, error } = useSignup();
   const {
     handleChange,
     handleSubmit,
@@ -23,7 +21,7 @@ function Signup() {
     },
     validationSchema: signupSchema,
     onSubmit: async ({ name, email, password }) => {
-      await signup(name, email, password);
+      doSignup({ name, email, password });
     },
   });
 
@@ -117,7 +115,9 @@ function Signup() {
           Submit
         </button>
 
-        {error && <div className="_error text-sm text-red-500">{error}</div>}
+        {isError && (
+          <div className="_error text-sm text-red-500">{error.message}</div>
+        )}
       </form>
     </div>
   );

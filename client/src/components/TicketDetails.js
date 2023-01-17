@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import dayjs from "dayjs";
 import { useParams, useNavigate } from "react-router-dom";
-import useAuthFetch from "../hooks/useAuthFetch";
+import { useDeleteTicket, useGetTicket } from "../hooks/useTickets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Modal from "./Modal";
@@ -15,14 +15,20 @@ const modalTypes = {
 function TicketDetails() {
   //same modal reused for both actions (edit and status update)
   const [modal, setModal] = useState({ open: false, type: "" });
-
   const navigate = useNavigate();
   const { id } = useParams();
   const {
+    mutate: deleteTicket,
+    isError: isDeleteError,
+    isLoading: isDeleteLoading,
+    error: deleteError,
+  } = useDeleteTicket();
+  const {
     data: { ticket } = {},
-    loading,
-    error,
-  } = useAuthFetch(`/api/tickets/${id}`);
+    isError: isGetError,
+    isLoading: isGetLoading,
+    error: getError,
+  } = useGetTicket(id);
 
   const handleModalClose = () => {
     setModal({ open: false, type: "" });
@@ -50,9 +56,18 @@ function TicketDetails() {
     });
   };
 
-  if (error) return <div>{error.message}</div>;
+  const handleDelete = async () => {
+    deleteTicket(id, {
+      onSuccess: () => {
+        navigate("/auth/tickets");
+      },
+    });
+  };
 
-  if (loading) return <div>Loading...</div>;
+  if (isGetError || isDeleteError)
+    return <div>{getError.message || deleteError.message}</div>;
+
+  if (isGetLoading || isDeleteLoading) return <div>Loading...</div>;
 
   return ticket ? (
     <div className="sm:w-1/2 w-11/12 p-4 mx-auto mt-8 border rounded border-gray-500">
@@ -191,7 +206,9 @@ function TicketDetails() {
             >
               Cancel
             </button>
-            <button className="btn btn-xs btn-secondary">Continue</button>
+            <button className="btn btn-xs btn-secondary" onClick={handleDelete}>
+              Continue
+            </button>
           </div>
         </Modal>
       )}

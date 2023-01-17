@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { useTicket } from "../hooks/useTicket";
-import useAuthFetch from "../hooks/useAuthFetch";
+import { useEditTicket } from "../hooks/useTickets";
 import { ticketSchema } from "../validations/ticketSchema";
+import { useGetUsers } from "../hooks/useUsers";
 
-//if fields prop is provided then use same component for editing ticket
 function EditTicket() {
+  const { data: userData } = useGetUsers();
   const { state, pathname } = useLocation();
   const navigate = useNavigate();
   const fields = state?.fields;
-  const { saveTicket, success, error, isLoading } = useTicket();
-  //for fetching data with user in localstorage (auth data)
-  const { data: userData } = useAuthFetch("/api/users");
+  const {
+    mutate: editTicket,
+    isError,
+    isLoading,
+    error,
+  } = useEditTicket(fields.id);
+
+  console.log(error);
   const {
     handleChange,
     handleSubmit,
@@ -28,28 +33,24 @@ function EditTicket() {
       assignee: fields?.assignee,
     },
     validationSchema: ticketSchema,
-    onSubmit: async (
-      { title, description, priority, assignee },
-      { resetForm }
-    ) => {
-      const url = `/api/tickets/${fields.id}`;
-      const body = {
+    onSubmit: ({ title, description, priority, assignee }) => {
+      const data = {
         title,
         description,
         priority,
         assigneeId: assignee,
       };
-      await saveTicket(url, body);
-      resetForm({ values: "" });
-      //after success clear route state
-      navigate(`/auth/tickets/${fields.id}`);
+      editTicket(data, {
+        onSuccess: () => {
+          navigate(`/auth/tickets/${fields.id}`);
+        },
+      });
     },
   });
 
   if (isLoading) return <div className="text-sm">Loading...</div>;
-  if (error) return <div className="text-sm text-red-500">{error}</div>;
-  if (!fields)
-    return <div className="text-sm text-red-500">Select ticket to edit</div>;
+  if (isError)
+    return <div className="text-sm text-red-500">{error.message}</div>;
 
   return (
     <div className="relative">
@@ -161,15 +162,6 @@ function EditTicket() {
             Submit
           </button>
         </form>
-        {/* toast */}
-
-        <div
-          className={`_toast  ${
-            success ? "" : "hidden"
-          }    w-40 flex justify-between border-l-4 text-green-700 border-green-500 py-2 px-2 text-sm bg-green-300 fixed top-24 rounded right-0 text-center z-30`}
-        >
-          <span>Ticket saved </span>
-        </div>
       </div>
     </div>
   );

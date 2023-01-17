@@ -2,20 +2,23 @@ import React, { useEffect, useState } from "react";
 
 import Ticket from "./Ticket";
 import Filter from "./Filter";
-import useAuthFetch from "../hooks/useAuthFetch";
-import { Link } from "react-router-dom";
+import { useGetTickets } from "../hooks/useTickets";
 
 function Tickets() {
   const [isOldest, setIsOldest] = useState(true);
   const [filter, setFilter] = useState({});
   const {
     data: ticketData,
-    loading,
-    error,
-  } = useAuthFetch("/api/tickets", {
+    isError,
+    isLoading,
+  } = useGetTickets({
     order: isOldest ? "DATE_DESC" : "DATE_ASC",
     filter,
   });
+
+  if (isError) return <div>Error</div>;
+
+  if (isLoading) return <div>...Loading</div>;
 
   return (
     <div className="sm:p-6 p-4">

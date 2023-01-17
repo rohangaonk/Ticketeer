@@ -9,6 +9,13 @@ import Profile from "./Profile";
 
 function Navbar({ dark, setDark }) {
   const { user } = useAuthContext();
+  const handleDarkMode = () => {
+    setDark((prevMode) => {
+      if (prevMode) localStorage.setItem("theme", "light");
+      else localStorage.setItem("theme", "dark");
+      return !prevMode;
+    });
+  };
   return (
     <div className="bg-base-200 h-full flex justify-between px-4 py-4 sm:px-12">
       <div className="flex items-center space-x-2  ">
@@ -25,11 +32,11 @@ function Navbar({ dark, setDark }) {
         )}
 
         {dark ? (
-          <button className="btn btn-ghost " onClick={() => setDark(false)}>
+          <button className="btn btn-ghost " onClick={handleDarkMode}>
             <FontAwesomeIcon icon={faMoon} size="lg" />
           </button>
         ) : (
-          <button className="btn btn-ghost" onClick={() => setDark(true)}>
+          <button className="btn btn-ghost" onClick={handleDarkMode}>
             <FontAwesomeIcon icon={faSun} size="lg" />
           </button>
         )}

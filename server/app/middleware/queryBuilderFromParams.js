@@ -1,5 +1,5 @@
 /*
-type filter = {
+type {
   filter:{},
   order:"",
   limit:"",
@@ -9,10 +9,8 @@ type filter = {
 
 module.exports = (req, res, next) => {
   try {
-    const criteria = req.query.filter ? JSON.parse(req.query.filter) : {};
-    console.log("criteria*********", criteria);
-    let { filter, order, limit, offset } = criteria;
-    filter = filter ? filter : null;
+    console.log("*********", req.query);
+    let { filter, order, limit, offset } = req.query || {};
     const modifier = {};
     if (limit) {
       modifier.limit = limit;
@@ -26,6 +24,8 @@ module.exports = (req, res, next) => {
     }
 
     req.query.filter = { filter, modifier };
+
+    console.log({ filter, modifier });
     next();
   } catch (err) {
     next(err);

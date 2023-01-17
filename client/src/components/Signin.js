@@ -3,14 +3,12 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { Link } from "react-router-dom";
-import { useSignin } from "../hooks/useSignin";
+import { useSignin } from "../hooks/useAuthUser";
 import { signinSchema } from "../validations/signinSchema";
 
 function Signin() {
   const [message, setMessage] = useState("");
-  const { signin, isLoading, error } = useSignin({
-    successRedirect: "/auth/tickets",
-  });
+  const { mutate: doSignin, isLoading, isError, error } = useSignin();
   const {
     handleSubmit,
     handleChange,
@@ -24,7 +22,7 @@ function Signin() {
     },
     validationSchema: signinSchema,
     onSubmit: async ({ email, password }) => {
-      await signin(email, password);
+      doSignin({ email, password });
     },
   });
 
@@ -89,7 +87,7 @@ function Signin() {
         <button className="btn btn-primary" disabled={isLoading}>
           Submit
         </button>
-        {error && <div className="text-sm text-red-500">{error}</div>}
+        {isError && <div className="text-sm text-red-500">{error.message}</div>}
       </form>
     </div>
   );

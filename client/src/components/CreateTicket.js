@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { replace, useFormik } from "formik";
-import { useTicket } from "../hooks/useTicket";
-import useAuthFetch from "../hooks/useAuthFetch";
+import React, { useState } from "react";
+import { useFormik } from "formik";
+import { useCreateTicket } from "../hooks/useTickets";
 import { ticketSchema } from "../validations/ticketSchema";
+import { useGetUsers } from "../hooks/useUsers";
 
-//if fields prop is provided then use same component for editing ticket
 function CreateTicket() {
-  const { saveTicket, success, error, isLoading } = useTicket();
-  //for fetching data with user in localstorage (auth data)
-  const { data: userData } = useAuthFetch("/api/users");
+  const [successToast, setSuccessToast] = useState(false);
+  const {
+    mutate: createNewTicket,
+    isError,
+    isLoading,
+    error,
+  } = useCreateTicket();
+  const { data: userData } = useGetUsers();
   const {
     handleChange,
     handleSubmit,
@@ -25,20 +28,22 @@ function CreateTicket() {
       assignee: "",
     },
     validationSchema: ticketSchema,
-    onSubmit: async (
-      { title, description, priority, assignee },
-      { resetForm }
-    ) => {
-      const url = "/api/tickets";
-      const body = {
+    onSubmit: ({ title, description, priority, assignee }, { resetForm }) => {
+      const data = {
         title,
         description,
         priority,
         assigneeId: assignee,
       };
-      console.log("submitting");
-      await saveTicket(url, body);
-      resetForm({ values: "" });
+      createNewTicket(data, {
+        onSuccess: () => {
+          resetForm({ values: "" });
+          setSuccessToast(true);
+          setTimeout(() => {
+            setSuccessToast(false);
+          }, 2000);
+        },
+      });
     },
   });
 
@@ -152,13 +157,15 @@ function CreateTicket() {
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
-          {error && <div className="text-sm text-red-500">{error}</div>}
+          {isError && (
+            <div className="text-sm text-red-500">{error.message}</div>
+          )}
         </form>
         {/* toast */}
 
         <div
           className={`_toast  ${
-            success ? "" : "hidden"
+            successToast ? "" : "hidden"
           }    w-40 flex justify-between border-l-4 text-green-700 border-green-500 py-2 px-2 text-sm bg-green-300 fixed top-24 rounded right-0 text-center z-30`}
         >
           <span>Ticket saved </span>

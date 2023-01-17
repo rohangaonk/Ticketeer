@@ -6,10 +6,13 @@ import Navbar from "./components/Navbar";
 
 import Home from "./components/Home";
 import Guest from "./components/Guest";
-import Welcome from "./components/Welcome";
 
 function App() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(() => {
+    return (
+      localStorage.getItem("theme") && localStorage.getItem("theme") === "dark"
+    );
+  });
   useEffect(() => {
     if (dark) document.body.setAttribute("data-theme", "dark");
     else document.body.setAttribute("data-theme", "light");

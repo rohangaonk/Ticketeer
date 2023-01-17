@@ -2,11 +2,12 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { useLogout } from "../hooks/useLogout";
+import { useSignout } from "../hooks/useAuthUser";
 
 function Profile() {
   const { user } = useAuthContext();
-  const { logout } = useLogout();
+  const { mutate: doSignout } = useSignout();
+
   return (
     <div className="dropdown">
       <label tabIndex="0" className="btn btn-ghost">
@@ -24,7 +25,7 @@ function Profile() {
         </li>
         <li>
           <a>
-            <button onClick={logout}>Logout</button>
+            <button onClick={doSignout}>Logout</button>
           </a>
         </li>
       </ul>
