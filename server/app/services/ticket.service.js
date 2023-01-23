@@ -21,7 +21,15 @@ const deleteTicket = async (ticketId) => {
 };
 
 const getAllTickets = async (filter, modifier) => {
-  return ticketRepository.findAll(filter, modifier);
+  return ticketRepository.findAndCountAll(filter, modifier);
+};
+
+const getTicketCount = async (filter) => {
+  return ticketRepository.getCount(filter);
+};
+
+const getTicketsBySearch = async (searchQuery) => {
+  return ticketRepository.findSearch(searchQuery);
 };
 
 module.exports = {
@@ -31,4 +39,6 @@ module.exports = {
   createTicket,
   updateTicket,
   deleteTicket,
+  getTicketCount,
+  getTicketsBySearch,
 };

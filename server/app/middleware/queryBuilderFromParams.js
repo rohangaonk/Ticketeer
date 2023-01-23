@@ -4,13 +4,14 @@ type {
   order:"",
   limit:"",
   offset:"",
+  search:""
 }
 */
 
 module.exports = (req, res, next) => {
   try {
-    console.log("*********", req.query);
     let { filter, order, limit, offset } = req.query || {};
+    const search = filter?.search;
     const modifier = {};
     if (limit) {
       modifier.limit = limit;
@@ -23,9 +24,7 @@ module.exports = (req, res, next) => {
       modifier.order = [[key, value]];
     }
 
-    req.query.filter = { filter, modifier };
-
-    console.log({ filter, modifier });
+    req.query.filter = { filter, modifier, search };
     next();
   } catch (err) {
     next(err);

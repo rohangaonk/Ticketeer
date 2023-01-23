@@ -41,6 +41,10 @@ class BaseRepository {
   destroy = async (filter) => {
     return this.model.destroy({ where: filter });
   };
+
+  getCount = async (filter) => {
+    return this.model.count({ where: filter });
+  };
 }
 
 module.exports = BaseRepository;

@@ -3,12 +3,13 @@ const {
   TICKET_STATUS: StatusType,
 } = require("../enums");
 module.exports = (sequelize, Sequelize) => {
-  const User = sequelize.define("tickets", {
+  const Ticket = sequelize.define("tickets", {
     id: {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
     },
+
     assigneeId: {
       type: Sequelize.UUID,
       references: {
@@ -43,5 +44,5 @@ module.exports = (sequelize, Sequelize) => {
     },
   });
 
-  return User;
+  return Ticket;
 };

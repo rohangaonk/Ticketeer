@@ -9,7 +9,6 @@ export const useGetTickets = (query) => {
 export const useGetTicket = (id) => {
   return useQuery(["GET_TICKET", id], fetchTicket);
 };
-
 export const useCreateTicket = () => {
   return useMutation(["CREATE_TICKET"], (data) => createTicket(data));
 };
@@ -25,6 +24,7 @@ export const useDeleteTicket = () => {
 const fetchTickets = async ({ queryKey }) => {
   const [, query] = queryKey;
   const queryObj = removeNullKeys(query);
+
   const res = await axios.get("/api/tickets", {
     params: queryObj,
   });

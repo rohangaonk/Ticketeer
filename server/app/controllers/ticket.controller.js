@@ -75,13 +75,30 @@ const getTicketByUser = async (req, res) => {
 };
 
 const getAllTickets = async (req, res) => {
-  const { filter, modifier } = req.query.filter;
-  console.log({ filter, modifier });
-  const tickets = await ticketService.getAllTickets(filter, modifier);
+  const { filter, modifier, search } = req.query.filter;
+  let result;
+
+  console.log("*******", search);
+  //if query param has search query dont apply any filter,
+  //filter result only based on search text
+  if (!search) result = await ticketService.getAllTickets(filter, modifier);
+  else result = await ticketService.getTicketsBySearch(search);
   res.status(200).json({
     message: "tickets retrieved",
     data: {
-      tickets,
+      count: result.count,
+      tickets: result.items,
+    },
+  });
+};
+
+const getTicketCount = async (req, res) => {
+  const { filter } = req.query.filter;
+  const count = await ticketService.getTicketCount(filter);
+  res.status(200).json({
+    message: "count retrieved",
+    data: {
+      count,
     },
   });
 };
@@ -93,4 +110,5 @@ module.exports = {
   updateTicket,
   deleteTicket,
   getTicketByUser,
+  getTicketCount,
 };

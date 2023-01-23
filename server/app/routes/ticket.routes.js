@@ -13,12 +13,11 @@ router.get("/test", queryBuilderFromParams, (req, res, next) => {
 });
 
 router.get("/user", catchAsync(ticket.getTicketByUser));
+router.get("/count", catchAsync(ticket.getTicketCount));
 router.get("/:ticketId", catchAsync(ticket.getTicket));
 router.get("/", queryBuilderFromParams, catchAsync(ticket.getAllTickets));
-
 router.post("/", catchAsync(ticket.createTicket));
 router.post("/:ticketId", catchAsync(ticket.updateTicket));
-
 router.delete("/:ticketId", catchAsync(ticket.deleteTicket));
 
 module.exports = router;

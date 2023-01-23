@@ -16,7 +16,7 @@ module.exports = (app) => {
   app.use("/api/auth", authRouter);
 
   //verify access token
-  app.use(authMiddleware.authorize);
+  // app.use(authMiddleware.authorize);
   app.use("/api/tickets", ticketRouter);
   app.use("/api/users", userRouter);
 };

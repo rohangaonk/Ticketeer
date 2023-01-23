@@ -1,5 +1,5 @@
 const BaseRepository = require("./repository");
-const tokenModel = require("../models").Token;
+const { Ticket } = require("../models");
 class tokenRepository extends BaseRepository {
   constructor(model) {
     super(model);
@@ -7,4 +7,4 @@ class tokenRepository extends BaseRepository {
   }
 }
 
-module.exports = new tokenRepository(tokenModel);
+module.exports = new tokenRepository(Ticket);
