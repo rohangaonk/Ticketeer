@@ -1,4 +1,6 @@
 const express = require("express");
+require("dotenv").config();
+const path = require("path");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -27,12 +29,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // test route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to my application." });
-});
 
 //load routes
+
 require("./app/routes")(app);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("../client/build"));
+  app.get("*", (req, res) => {
+    console.log("*********hit");
+    res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
+  });
+}
 
 app.use((err, req, res, next) => {
   console.log(err);
@@ -47,7 +55,7 @@ app.use((err, req, res, next) => {
 });
 
 // set port, listen for requests
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });

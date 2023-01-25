@@ -14,8 +14,8 @@ function App() {
     );
   });
   useEffect(() => {
-    if (dark) document.body.setAttribute("data-theme", "dark");
-    else document.body.setAttribute("data-theme", "light");
+    if (dark) document.body.setAttribute("data-theme", "night");
+    else document.body.setAttribute("data-theme", "cmyk");
   }, [dark]);
 
   return (
