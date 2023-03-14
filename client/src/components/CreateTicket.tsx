@@ -37,7 +37,7 @@ function CreateTicket() {
       };
       createNewTicket(data, {
         onSuccess: () => {
-          resetForm({ values: "" });
+          resetForm();
           setSuccessToast(true);
           setTimeout(() => {
             setSuccessToast(false);
@@ -77,7 +77,6 @@ function CreateTicket() {
           <div className="_description flex flex-col">
             <label className="label-text pb-2">Description</label>
             <textarea
-              type="textarea"
               name="description"
               placeholder="Description"
               onChange={handleChange}

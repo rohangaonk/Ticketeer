@@ -13,7 +13,7 @@ function Developer() {
         />
       </a>
       <div>
-        <p className="text-sm font-medium ">{user.username}</p>
+        <p className="text-sm font-medium ">{user?.username}</p>
         <p className="text-xs font-medium tracking-wide">Developer</p>
       </div>
     </div>

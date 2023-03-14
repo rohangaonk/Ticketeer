@@ -7,7 +7,12 @@ import { faMoon, faSun, faBars } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
 import Profile from "./Profile";
 
-function Navbar({ dark, setDark }) {
+type props = {
+  dark: boolean;
+  setDark: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+function Navbar({ dark, setDark }: props) {
   const { user } = useAuthContext();
   const handleDarkMode = () => {
     setDark((prevMode) => {
@@ -45,7 +50,7 @@ function Navbar({ dark, setDark }) {
             <FontAwesomeIcon icon={faBars} size="lg" />
           </button>
           <nav
-            tabIndex="0"
+            tabIndex={0}
             className="fixed h-screen left-0 top-0 -translate-x-60 group-focus-within:translate-x-0  transition-transform duration-200 ease-in"
           >
             <Sidebar />

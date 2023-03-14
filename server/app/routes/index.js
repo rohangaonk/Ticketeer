@@ -16,7 +16,7 @@ module.exports = (app) => {
   app.use("/api/auth", authRouter);
 
   //verify access token
-  // "api" is necessary during auth middleware otherwise it hits for any random route which causes
+  // "api" is necessary in route during auth middleware otherwise it hits for any random route which causes
   //error in executing following lines in main server file
 
   //if (process.env.NODE_ENV === "production") {

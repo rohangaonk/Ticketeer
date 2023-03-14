@@ -12,6 +12,7 @@ const createTicket = async (ticket) => {
   return ticketRepository.create(ticket);
 };
 
+//used for ticket update and also status-toggle
 const updateTicket = async (ticket, ticketId) => {
   return ticketRepository.update(ticket, { id: ticketId });
 };

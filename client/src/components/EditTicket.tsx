@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { useEditTicket } from "../hooks/useTickets";
@@ -70,7 +69,8 @@ function EditTicket() {
               onChange={handleChange}
               value={values.title}
             />
-            {validationErrors.title && touched.title && (
+            {/* check for "string" to make typescript happy */}
+            {validationErrors.title === "string" && touched.title && (
               <label className="label">
                 <span className="label-text-alt text-secondary">
                   {validationErrors.title}
@@ -81,20 +81,20 @@ function EditTicket() {
           <div className="_description flex flex-col">
             <label className="label-text pb-2">Description</label>
             <textarea
-              type="textarea"
               name="description"
               placeholder="Description"
               onChange={handleChange}
               value={values.description}
               className="textarea textarea-bordered textarea-primary w-full h-24 "
             />
-            {validationErrors.description && touched.description && (
-              <label className="label">
-                <span className="label-text-alt text-secondary">
-                  {validationErrors.description}
-                </span>
-              </label>
-            )}
+            {validationErrors.description === "string" &&
+              touched.description && (
+                <label className="label">
+                  <span className="label-text-alt text-secondary">
+                    {validationErrors.description}
+                  </span>
+                </label>
+              )}
           </div>
           <div className="_priority">
             <label className="label-text">Priority</label>
@@ -133,7 +133,7 @@ function EditTicket() {
                 />
               </label>
             </div>
-            {validationErrors.priority && touched.priority && (
+            {validationErrors.priority === "string" && touched.priority && (
               <label className="label">
                 <span className="label-text-alt text-secondary">
                   {validationErrors.priority}

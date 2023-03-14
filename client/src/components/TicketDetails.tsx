@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import dayjs from "dayjs";
 import { useParams, useNavigate } from "react-router-dom";
-import { useDeleteTicket, useGetTicket } from "../hooks/useTickets";
+import {
+  useDeleteTicket,
+  useGetTicket,
+  useToggleStatus,
+} from "../hooks/useTickets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Modal from "./Modal";
@@ -23,12 +27,20 @@ function TicketDetails() {
     isLoading: isDeleteLoading,
     error: deleteError,
   } = useDeleteTicket();
+
+  const {
+    mutate: toggleStatus,
+    isError: isToggleError,
+    isLoading: isToggleLoading,
+    error: toggleError,
+  } = useToggleStatus(id as string);
+
   const {
     data: { ticket } = {},
     isError: isGetError,
     isLoading: isGetLoading,
     error: getError,
-  } = useGetTicket(id);
+  } = useGetTicket(id as string);
 
   const handleModalClose = () => {
     setModal({ open: false, type: "" });
@@ -37,7 +49,7 @@ function TicketDetails() {
   const handleEditModal = () => {
     //if ticket is in closed state we show modal
     //else direct redirect to edit page
-    if (ticket.status === "closed") {
+    if (ticket?.status === "closed") {
       setModal({ open: true, type: modalTypes.EDIT });
     } else handleEditTicket();
   };
@@ -46,28 +58,38 @@ function TicketDetails() {
     navigate("/auth/edit-ticket", {
       state: {
         fields: {
-          id: ticket.id,
-          title: ticket.title,
-          description: ticket.description,
-          priority: ticket.priority,
-          assignee: ticket.assignee.id,
+          id: ticket?.id,
+          title: ticket?.title,
+          description: ticket?.description,
+          priority: ticket?.priority,
+          assignee: ticket?.assignee.id,
         },
       },
     });
   };
 
+  const handleEditStatus = () => {
+    setModal({ open: false, type: "" });
+    toggleStatus(id as string);
+  };
+
   const handleDelete = async () => {
-    deleteTicket(id, {
+    deleteTicket(id as string, {
       onSuccess: () => {
         navigate("/auth/tickets");
       },
     });
   };
 
-  if (isGetError || isDeleteError)
-    return <div>{getError.message || deleteError.message}</div>;
+  if (isGetError || isDeleteError || toggleError)
+    return (
+      <div>
+        {getError?.message || deleteError?.message || toggleError?.message}
+      </div>
+    );
 
-  if (isGetLoading || isDeleteLoading) return <div>Loading...</div>;
+  if (isGetLoading || isDeleteLoading || isToggleLoading)
+    return <div>Loading...</div>;
 
   return ticket ? (
     <div className="sm:w-1/2 w-11/12 p-4 mx-auto mt-8 border rounded border-gray-500">
@@ -187,7 +209,12 @@ function TicketDetails() {
             >
               Cancel
             </button>
-            <button className="btn btn-xs btn-secondary">Continue</button>
+            <button
+              className="btn btn-xs btn-secondary"
+              onClick={handleEditStatus}
+            >
+              Continue
+            </button>
           </div>
         </Modal>
       )}

@@ -1,15 +1,20 @@
 import React, { useState } from "react";
+import { FilterType, Status, Priority } from "../types/tickets";
 
-function Filter({ setFilter }) {
-  const [priority, setPriority] = useState([]);
-  const [status, setStatus] = useState([]);
+type props = {
+  setFilter: (val: FilterType) => void;
+};
 
-  const handleChange = (e) => {
+function Filter({ setFilter }: props) {
+  const [priority, setPriority] = useState<Priority[]>([]);
+  const [status, setStatus] = useState<Status[]>([]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
       case "status":
         if (e.target.checked)
           setStatus((prev) => {
-            return [...prev, e.target.value];
+            return [...prev, e.target.value as Status];
           });
         else {
           setStatus((prev) => {
@@ -20,7 +25,7 @@ function Filter({ setFilter }) {
       case "priority":
         if (e.target.checked)
           setPriority((prev) => {
-            return [...prev, e.target.value];
+            return [...prev, e.target.value as Priority];
           });
         else {
           setPriority((prev) => {
@@ -56,7 +61,7 @@ function Filter({ setFilter }) {
       {/* drawer */}
       <div className="_overlay h-screen w-full fixed left-0 top-0 z-50 flex justify-end bg-black bg-opacity-40 invisible opacity-0 group-focus-within:visible group-focus-within:opacity-100 transition-opacity duration-100 ease-in">
         <div
-          tabIndex="0"
+          tabIndex={0}
           className="w-3/4 sm:w-1/4 h-screen bg-base-100 translate-x-full group-focus-within:translate-x-0 transition-transform duration-200 ease-in"
         >
           <div className="_header w-full bg-base-200  px-4 py-6 flex justify-between items-center">

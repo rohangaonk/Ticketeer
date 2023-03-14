@@ -1,8 +1,9 @@
-import React from "react";
-import { Navigate, Route, useLocation } from "react-router-dom";
+import React, { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
-function ProtectedRoute({ children }) {
+//children typed as jsx element Reactnode not compatible
+function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { user } = useAuthContext();
   if (!user) {
     // user is not authenticated

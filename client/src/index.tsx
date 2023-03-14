@@ -6,7 +6,7 @@ import "./index.css";
 import App from "./App";
 import { AuthContextProvider } from "./contexts/authContext";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root")!);
 const queryClient = new QueryClient();
 root.render(
   <React.StrictMode>

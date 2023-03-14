@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-
-import Ticket from "./Ticket";
 import Filter from "./Filter";
 import { useGetTickets } from "../hooks/useTickets";
 import SearchTicket from "./SearchTicket";
 import DisplayTickets from "./DisplayTickets";
+import { FilterType } from "../types/tickets";
 
 function Tickets() {
   const [isOldest, setIsOldest] = useState(true);
-  const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState<FilterType>({});
   const [search, setSearch] = useState("");
   const {
     data: ticketData,
@@ -56,7 +55,7 @@ function Tickets() {
       ) : isError ? (
         <p>{error.message}</p>
       ) : (
-        <DisplayTickets ticketData={ticketData} />
+        <DisplayTickets tickets={ticketData?.tickets} />
       )}
     </div>
   );

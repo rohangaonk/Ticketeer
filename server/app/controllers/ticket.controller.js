@@ -103,6 +103,27 @@ const getTicketCount = async (req, res) => {
   });
 };
 
+const toggleTicketStatus = async (req, res) => {
+  //get previous status for this ticket
+  const ticketId = req.params.ticketId;
+  const ticket = await ticketService.getTicket(ticketId);
+  const newStatus = ticket.status === "open" ? "closed" : "open";
+
+  //update ticket
+  const updatedTicket = await ticketService.updateTicket(
+    {
+      status: newStatus,
+    },
+    ticketId
+  );
+  res.status(200).json({
+    message: "ticket updated",
+    data: {
+      ticket: updatedTicket,
+    },
+  });
+};
+
 module.exports = {
   getTicket,
   getAllTickets,
@@ -111,4 +132,5 @@ module.exports = {
   deleteTicket,
   getTicketByUser,
   getTicketCount,
+  toggleTicketStatus,
 };

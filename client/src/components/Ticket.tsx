@@ -1,7 +1,13 @@
 import React from "react";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-function Ticket({ item }) {
+import { FetchedTicket } from "../types/tickets";
+
+type props = {
+  item: FetchedTicket;
+};
+
+function Ticket({ item }: props) {
   const navigate = useNavigate();
   return (
     <tr

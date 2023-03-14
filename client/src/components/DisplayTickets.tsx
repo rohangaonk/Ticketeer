@@ -1,7 +1,12 @@
 import React from "react";
 import Ticket from "./Ticket";
+import { FetchedTicket } from "../types/tickets";
 
-function DisplayTickets({ ticketData }) {
+type props = {
+  tickets?: [FetchedTicket];
+};
+
+function DisplayTickets({ tickets }: props) {
   return (
     <div className="overflow-x-auto mt-4">
       <table className="table table-zebra w-full text-sm">
@@ -17,7 +22,7 @@ function DisplayTickets({ ticketData }) {
           </tr>
         </thead>
         <tbody>
-          {ticketData?.tickets?.map((item, i) => (
+          {tickets?.map((item, i) => (
             <Ticket key={i} item={item} />
           ))}
         </tbody>

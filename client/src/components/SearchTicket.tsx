@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
 import useDebounce from "../hooks/useDebounce";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FilterType } from "../types/tickets";
 
-function SearchTicket({ setFilter, search, setSearch }) {
+type props = {
+  setFilter: (val: FilterType) => void;
+  search: string;
+  setSearch: (val: string) => void;
+};
+
+function SearchTicket({ setFilter, search, setSearch }: props) {
   const debouncedVal = useDebounce(search);
 
   useEffect(() => {
     if (debouncedVal) setFilter({ search: debouncedVal });
   }, [debouncedVal]);
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value: nextValue } = event.target;
     setSearch(nextValue);
   };

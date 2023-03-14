@@ -9,9 +9,7 @@ import Guest from "./components/Guest";
 
 function App() {
   const [dark, setDark] = useState(() => {
-    return (
-      localStorage.getItem("theme") && localStorage.getItem("theme") === "dark"
-    );
+    return localStorage.getItem("theme") === "dark";
   });
   useEffect(() => {
     if (dark) document.body.setAttribute("data-theme", "night");

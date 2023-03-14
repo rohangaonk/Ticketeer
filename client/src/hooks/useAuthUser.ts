@@ -3,10 +3,20 @@ import { useNavigate } from "react-router-dom";
 import axios from "../utils/axiosCustom";
 import { useAuthContext } from "./useAuthContext";
 
+type SignInUser = {
+  email: string;
+  password: string;
+};
+type SignUpUser = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 export const useSignin = () => {
   const { dispatch } = useAuthContext();
   const navigate = useNavigate();
-  return useMutation(["SIGNIN"], doSignin, {
+  return useMutation<any, Error, SignInUser>(["SIGNIN"], doSignin, {
     onSuccess: (data) => {
       localStorage.setItem("user", JSON.stringify(data));
       dispatch({ type: "LOGIN", payload: data });
@@ -16,7 +26,7 @@ export const useSignin = () => {
 };
 export const useSignup = () => {
   const navigate = useNavigate();
-  return useMutation(["SIGNUP"], doSignup, {
+  return useMutation<any, Error, SignUpUser>(["SIGNUP"], doSignup, {
     onSuccess: () => {
       navigate("/signin", { state: { message: "Signup Successful" } });
     },
@@ -35,14 +45,14 @@ export const useSignout = () => {
   });
 };
 
-const doSignin = async (data) => {
+const doSignin = async (data: SignInUser) => {
   const res = await axios.post("/api/auth/signin", data);
   return res.data.data;
 };
-const doSignup = async (data) => {
+const doSignup = async (data: SignUpUser) => {
   const res = await axios.post("/api/auth/signup", data);
   return res.data.data;
 };
-const doSignout = async (data) => {
+const doSignout = async () => {
   return null;
 };
